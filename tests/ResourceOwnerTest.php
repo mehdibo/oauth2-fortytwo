@@ -44,17 +44,17 @@ class ResourceOwnerTest extends TestCase
         $this->assertEquals('Cat', $this->owner->getLastName());
     }
 
-    public function testGetImageUrl()
+    public function testGetImageUrl(): void
     {
         $this->assertEquals('image_url', $this->owner->getImageUrl());
     }
 
-    public function testGetIsStaff()
+    public function testGetIsStaff(): void
     {
         $this->assertTrue($this->owner->getIsStaff());
     }
 
-    public function testGetLogin()
+    public function testGetLogin(): void
     {
         $this->assertEquals('ncat', $this->owner->getLogin());
     }
