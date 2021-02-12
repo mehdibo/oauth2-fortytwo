@@ -3,7 +3,9 @@
 namespace Mehdibo\OAuth2\Client\Test;
 
 use GuzzleHttp\ClientInterface;
+use League\OAuth2\Client\Token\AccessToken;
 use Mehdibo\OAuth2\Client\Provider\FortyTwo;
+use Mehdibo\OAuth2\Client\Provider\ResourceOwner;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -125,6 +127,41 @@ JSON);
         $this->assertNull($token->getResourceOwnerId(), "42 Intranet doesn't return a resource owner");
     }
 
-    // TODO: get resource owner
+    public function testGetResourceOwner(): void
+    {
+        $response = $this->createMockResponse(<<<JSON
+{
+  "id": 42,
+  "login": "ncat",
+  "email": "test@email.com",
+  "first_name": "Norminet",
+  "last_name": "Cat",
+  "image_url": "image_url",
+  "staff?": false
+}
+JSON);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->method('send')
+            ->willReturn($response);
+
+        $this->provider->setHttpClient($client);
+
+        $accessToken = $this->createMock(AccessToken::class);
+        $accessToken->method('getToken')
+            ->willReturn('mock_access_token');
+
+        $resourceOwner = $this->provider->getResourceOwner($accessToken);
+        $this->assertInstanceOf(ResourceOwner::class, $resourceOwner);
+        $this->assertEquals([
+            'id' => 42,
+            'login' => 'ncat',
+            'email' => 'test@email.com',
+            'first_name' => 'Norminet',
+            'last_name' => 'Cat',
+            'image_url' => 'image_url',
+            'staff?' => false,
+        ], $resourceOwner->toArray());
+    }
 
 }
