@@ -4,6 +4,7 @@ namespace Mehdibo\OAuth2\Client\Test;
 
 use GuzzleHttp\ClientInterface;
 use Mehdibo\OAuth2\Client\Provider\FortyTwo;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
@@ -18,6 +19,24 @@ class FortyTwoTest extends TestCase
              'clientSecret' => 'mock_secret',
              'redirectUri' => 'mock_redirect_uri',
         ]);
+    }
+
+    /**
+     * @param string $responseBody
+     * @param int $statusCode
+     * @return MockObject<ResponseInterface>
+     */
+    private function createMockResponse(string $responseBody, int $statusCode = 200): MockObject
+    {
+        $response = $this->createMock(ResponseInterface::class);
+
+        $response->method('getStatusCode')
+            ->willReturn($statusCode);
+
+        $response->method('getBody')
+            ->willReturn($responseBody);
+
+        return $response;
     }
 
     public function testAuthorizationUrl()
@@ -49,21 +68,21 @@ class FortyTwoTest extends TestCase
         $this->assertEquals('/oauth/authorize', $uri['path']);
     }
 
-    public function testGetAccessToken()
+    public function testGetAccessTokenWithAuthorizationCode()
     {
-        $response = $this->createMock(ResponseInterface::class);
-
-        $response->method('getHeader')
-            ->withConsecutive([])
-            ->willReturn('application/json');
-
-        $response->method('getBody')
-            ->withConsecutive([])
-            ->willReturn('{}'); // TODO: set expected response body
+        $response = $this->createMockResponse(<<<JSON
+{
+  "access_token": "mock_access_token",
+  "token_type": "bearer",
+  "refresh_token": "mock_refresh_token",
+  "expires_in": 7200,
+  "scope": "public",
+  "created_at": 1613125557
+}
+JSON);
 
         $client = $this->createMock(ClientInterface::class);
         $client->method('send')
-            ->withConsecutive([])
             ->willReturn($response);
 
 
@@ -73,12 +92,37 @@ class FortyTwoTest extends TestCase
 
         $this->assertEquals('mock_access_token', $token->getToken());
         $this->assertEquals('mock_refresh_token', $token->getRefreshToken());
-        $this->assertLessThanOrEqual(time() + 3600, $token->getExpires());
+        $this->assertLessThanOrEqual(time() + 7200, $token->getExpires());
         $this->assertGreaterThanOrEqual(time(), $token->getExpires());
-        // TODO: Check returned id
-        $this->assertNull($token->getResourceOwnerId(), 1);
+        $this->assertNull($token->getResourceOwnerId(), "42 Intranet doesn't return a resource owner");
     }
 
-    // TODO: test other grants
+    public function testGetAccessTokenWithClientCredentials()
+    {
+        $response = $this->createMockResponse(<<<JSON
+{
+  "access_token": "mock_access_token",
+  "token_type": "bearer",
+  "expires_in": 7200,
+  "scope": "public",
+  "created_at": 1613125557
+}
+JSON);
+        $client = $this->createMock(ClientInterface::class);
+        $client->method('send')
+            ->withConsecutive([])
+            ->willReturn($response);
+
+
+        $this->provider->setHttpClient($client);
+
+        $token = $this->provider->getAccessToken('client_credentials');
+
+        $this->assertEquals('mock_access_token', $token->getToken());
+        $this->assertNull($token->getRefreshToken());
+        $this->assertLessThanOrEqual(time() + 7200, $token->getExpires());
+        $this->assertGreaterThanOrEqual(time(), $token->getExpires());
+        $this->assertNull($token->getResourceOwnerId(), "42 Intranet doesn't return a resource owner");
+    }
 
 }
