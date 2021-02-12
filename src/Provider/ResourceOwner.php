@@ -9,6 +9,11 @@ use League\OAuth2\Client\Provider\GenericResourceOwner;
 final class ResourceOwner extends GenericResourceOwner
 {
 
+    public function __construct(array $response)
+    {
+        parent::__construct($response, "id");
+    }
+
     public function getEmail(): ?string
     {
         return $this->response['email'] ?? null;
