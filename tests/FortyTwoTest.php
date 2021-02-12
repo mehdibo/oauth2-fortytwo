@@ -125,4 +125,6 @@ JSON);
         $this->assertNull($token->getResourceOwnerId(), "42 Intranet doesn't return a resource owner");
     }
 
+    // TODO: get resource owner
+
 }
