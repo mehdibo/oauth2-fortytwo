@@ -34,7 +34,7 @@ jobs:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php-versions }}
+            ${{ runner.os }}-php-
 
       - name: Validate composer.json
         run: composer validate
