@@ -44,3 +44,6 @@ jobs:
 
       - name: Run tests
         run: vendor/bin/phpunit --testdox
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse -l 8 src tests
