@@ -28,7 +28,8 @@
         "league/oauth2-client": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^0.12.76"
     },
     "autoload": {
         "psr-4": {
