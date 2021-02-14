@@ -1,7 +1,7 @@
 # 42 Intranet OAuth 2.0 provider for the PHP League's OAuth 2.0 Client
 ![Latest version](https://img.shields.io/github/v/tag/mehdibo/oauth2-fortytwo)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-![Unit tests](https://github.com/mehdibo/oauth2-fortytwo/workflows/Unit%20tests/badge.svg?branch=develop)
+![Unit tests](https://github.com/mehdibo/oauth2-fortytwo/workflows/Unit%20tests/badge.svg?branch=main)
 ![Packagist Downloads](https://img.shields.io/packagist/dt/mehdibo/oauth2-fortytwo)
 
 
