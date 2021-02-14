@@ -16,6 +16,9 @@ class FortyTwo extends AbstractProvider
         return "https://api.intra.42.fr/oauth/authorize";
     }
 
+    /**
+     * @param array<string, mixed> $params
+     */
     public function getBaseAccessTokenUrl(array $params): string
     {
         return "https://api.intra.42.fr/oauth/token";
@@ -39,23 +42,39 @@ class FortyTwo extends AbstractProvider
         return " ";
     }
 
+    /**
+     * @param array<string, mixed>|string $data
+     * @throws IdentityProviderException
+     */
     protected function checkResponse(ResponseInterface $response, $data)
     {
         if ($response->getStatusCode() !== 200) {
-            $errorDescription = $data['error_description'] ?? $data['message'];
+            $errorDescription = '';
+            $error = '';
+            if (\is_array($data)) {
+                $errorDescription = $data['error_description'] ?? $data['message'];
+                $error = $data['error'];
+            }
             throw new IdentityProviderException(
-                sprintf("%d - %s: %s", $response->getStatusCode(), $data['error'], $errorDescription),
+                sprintf("%d - %s: %s", $response->getStatusCode(), $error, $errorDescription),
                 $response->getStatusCode(),
-                $response
+                $data
             );
         }
     }
 
+    /**
+     * @param array<string, mixed> $response
+     */
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwner
     {
         return new ResourceOwner($response);
     }
 
+    /**
+     * @param AccessTokenInterface|string|null $token
+     * @return array<string, string>
+     */
     protected function getAuthorizationHeaders($token = null): array
     {
         $stringToken = $token;

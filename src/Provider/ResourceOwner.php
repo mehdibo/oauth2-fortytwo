@@ -9,6 +9,9 @@ use League\OAuth2\Client\Provider\GenericResourceOwner;
 final class ResourceOwner extends GenericResourceOwner
 {
 
+    /**
+     * @param array<string, mixed> $response
+     */
     public function __construct(array $response)
     {
         parent::__construct($response, "id");

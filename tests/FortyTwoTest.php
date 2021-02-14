@@ -26,7 +26,7 @@ class FortyTwoTest extends TestCase
     /**
      * @param string $responseBody
      * @param int $statusCode
-     * @return MockObject<ResponseInterface>
+     * @return MockObject
      */
     private function createMockResponse(string $responseBody, int $statusCode = 200): MockObject
     {
@@ -41,36 +41,50 @@ class FortyTwoTest extends TestCase
         return $response;
     }
 
-    public function testAuthorizationUrl()
+    public function testAuthorizationUrl(): void
     {
         $url = $this->provider->getAuthorizationUrl();
         $uri = parse_url($url);
-        parse_str($uri['query'], $query);
+        $query = [];
+
+        if (\is_array($uri) && isset($uri['query'])) {
+            parse_str($uri['query'], $query);
+        }
 
         $this->assertArrayHasKey('client_id', $query);
         $this->assertArrayHasKey('response_type', $query);
         $this->assertArrayHasKey('redirect_uri', $query);
     }
 
-    public function testGetBaseAccessTokenUrl()
+    public function testGetBaseAccessTokenUrl(): void
     {
         $params = [];
 
         $url = $this->provider->getBaseAccessTokenUrl($params);
         $uri = parse_url($url);
 
-        $this->assertEquals('/oauth/token', $uri['path']);
+        $path = '';
+        if (\is_array($uri) && isset($uri['path'])) {
+            $path = $uri['path'];
+        }
+
+        $this->assertEquals('/oauth/token', $path);
     }
 
-    public function testGetAuthorizationUrl()
+    public function testGetAuthorizationUrl(): void
     {
         $url = $this->provider->getAuthorizationUrl();
         $uri = parse_url($url);
 
-        $this->assertEquals('/oauth/authorize', $uri['path']);
+        $path = '';
+        if (\is_array($uri) && isset($uri['path'])) {
+            $path = $uri['path'];
+        }
+
+        $this->assertEquals('/oauth/authorize', $path);
     }
 
-    public function testGetAccessTokenWithAuthorizationCode()
+    public function testGetAccessTokenWithAuthorizationCode(): void
     {
         $response = $this->createMockResponse(<<<JSON
 {
@@ -96,10 +110,9 @@ JSON);
         $this->assertEquals('mock_refresh_token', $token->getRefreshToken());
         $this->assertLessThanOrEqual(time() + 7200, $token->getExpires());
         $this->assertGreaterThanOrEqual(time(), $token->getExpires());
-        $this->assertNull($token->getResourceOwnerId(), "42 Intranet doesn't return a resource owner");
     }
 
-    public function testGetAccessTokenWithClientCredentials()
+    public function testGetAccessTokenWithClientCredentials(): void
     {
         $response = $this->createMockResponse(<<<JSON
 {
@@ -124,7 +137,6 @@ JSON);
         $this->assertNull($token->getRefreshToken());
         $this->assertLessThanOrEqual(time() + 7200, $token->getExpires());
         $this->assertGreaterThanOrEqual(time(), $token->getExpires());
-        $this->assertNull($token->getResourceOwnerId(), "42 Intranet doesn't return a resource owner");
     }
 
     public function testGetResourceOwner(): void
