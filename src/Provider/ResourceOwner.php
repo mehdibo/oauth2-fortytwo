@@ -3,7 +3,6 @@
 
 namespace Mehdibo\OAuth2\Client\Provider;
 
-
 use League\OAuth2\Client\Provider\GenericResourceOwner;
 
 final class ResourceOwner extends GenericResourceOwner
