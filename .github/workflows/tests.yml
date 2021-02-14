@@ -40,7 +40,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --no-progress --no-interaction
+        run: composer install --optimize-autoloader --no-progress --no-interaction --prefer-dist
 
       - name: Run tests
         run: vendor/bin/phpunit --testdox
