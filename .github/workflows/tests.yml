@@ -1,4 +1,4 @@
-name: Unit tests
+name: CI tests
 
 on:
   push:
@@ -47,3 +47,6 @@ jobs:
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse --level 8 --no-interaction --no-progress src tests
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs src tests --standard=psr2 -s
