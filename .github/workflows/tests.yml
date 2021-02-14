@@ -24,6 +24,9 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
+      - name: Print PHP version
+        run: php -v
+
       - name: Cache Composer packages
         id: composer-cache
         uses: actions/cache@v2
