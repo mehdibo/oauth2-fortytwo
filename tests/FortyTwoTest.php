@@ -43,7 +43,11 @@ class FortyTwoTest extends TestCase
 
     public function testAuthorizationUrl(): void
     {
-        $url = $this->provider->getAuthorizationUrl();
+        $url = $this->provider->getAuthorizationUrl(
+            [
+                'scope' => ['public', 'profile']
+            ]
+        );
         $uri = parse_url($url);
         $query = [];
 
@@ -51,9 +55,10 @@ class FortyTwoTest extends TestCase
             parse_str($uri['query'], $query);
         }
 
-        $this->assertArrayHasKey('client_id', $query);
+        $this->assertEquals('public profile', $query['scope']);
+        $this->assertEquals('mock_client_id', $query['client_id']);
+        $this->assertEquals('mock_redirect_uri', $query['redirect_uri']);
         $this->assertArrayHasKey('response_type', $query);
-        $this->assertArrayHasKey('redirect_uri', $query);
     }
 
     public function testGetBaseAccessTokenUrl(): void
