@@ -175,5 +175,4 @@ JSON);
             'staff?' => false,
         ], $resourceOwner->toArray());
     }
-
 }
