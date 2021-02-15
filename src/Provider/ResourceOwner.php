@@ -46,6 +46,9 @@ final class ResourceOwner extends GenericResourceOwner
         return $this->response['staff?'] ?? null;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRoles(): array
     {
         $roles = [];
