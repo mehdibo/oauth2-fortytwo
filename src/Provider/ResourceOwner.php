@@ -45,4 +45,23 @@ final class ResourceOwner extends GenericResourceOwner
     {
         return $this->response['staff?'] ?? null;
     }
+
+    public function getRoles(): array
+    {
+        $roles = [];
+        foreach ($this->response['roles'] as $role) {
+            $roles[] = $role['name'];
+        }
+        return $roles;
+    }
+
+    public function getPrimaryCampusId(): ?int
+    {
+        foreach ($this->response['campus_users'] as $campusUser) {
+            if ($campusUser['is_primary']) {
+                return $campusUser['campus_id'];
+            }
+        }
+        return null;
+    }
 }
