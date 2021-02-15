@@ -5,11 +5,12 @@ namespace Mehdibo\OAuth2\Client\Provider;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-use League\OAuth2\Client\Token\AccessTokenInterface;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
 class FortyTwo extends AbstractProvider
 {
+    use BearerAuthorizationTrait;
 
     public function getBaseAuthorizationUrl(): string
     {
@@ -69,20 +70,5 @@ class FortyTwo extends AbstractProvider
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwner
     {
         return new ResourceOwner($response);
-    }
-
-    /**
-     * @param AccessTokenInterface|string|null $token
-     * @return array<string, string>
-     */
-    protected function getAuthorizationHeaders($token = null): array
-    {
-        $stringToken = $token;
-        if ($token instanceof AccessTokenInterface) {
-            $stringToken = $token->getToken();
-        }
-        return [
-            'Authorization' => 'Bearer '.$stringToken
-        ];
     }
 }
