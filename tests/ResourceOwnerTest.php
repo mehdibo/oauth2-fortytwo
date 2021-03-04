@@ -20,7 +20,30 @@ class ResourceOwnerTest extends TestCase
             'last_name' => 'Cat',
             'image_url' => 'image_url',
             'staff?' => true,
-
+            'roles' => [
+                [
+                    'id' => 1,
+                    'name' => 'role_a'
+                ],
+                [
+                    'id' => 1,
+                    'name' => 'role_b'
+                ]
+            ],
+            'campus_users' => [
+                [
+                    "id" => 1,
+                    "user_id" => 2,
+                    "campus_id" => 3,
+                    "is_primary" => false,
+                ],
+                [
+                    "id" => 4,
+                    "user_id" => 5,
+                    "campus_id" => 6,
+                    "is_primary" => true,
+                ]
+            ]
         ]);
     }
 
@@ -57,5 +80,15 @@ class ResourceOwnerTest extends TestCase
     public function testGetLogin(): void
     {
         $this->assertEquals('ncat', $this->owner->getLogin());
+    }
+
+    public function testGetRoles(): void
+    {
+        $this->assertEquals(['role_a', 'role_b'], $this->owner->getRoles());
+    }
+
+    public function testGetPrimaryCampusId(): void
+    {
+        $this->assertEquals(6, $this->owner->getPrimaryCampusId());
     }
 }
