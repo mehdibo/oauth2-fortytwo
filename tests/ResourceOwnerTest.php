@@ -43,7 +43,31 @@ class ResourceOwnerTest extends TestCase
                     "campus_id" => 6,
                     "is_primary" => true,
                 ]
-            ]
+            ],
+            'cursus_users' => [
+                [
+                    'grade' => 'Commander',
+                    'level' => 13.37,
+                    'skills' => [],
+                    'blackholed_at' => null,
+                    'id' => 3213,
+                    'cursus' => [
+                        'id' => 2,
+                        'name' => 'Test cursus',
+                    ],
+                ],
+                [
+                    'grade' => 'Chandler',
+                    'level' => 42.20,
+                    'skills' => [],
+                    'blackholed_at' => null,
+                    'id' => 4222,
+                    'cursus' => [
+                        'id' => 5,
+                        'name' => 'Test cursus 2',
+                    ],
+                ]
+            ],
         ]);
     }
 
@@ -90,5 +114,39 @@ class ResourceOwnerTest extends TestCase
     public function testGetPrimaryCampusId(): void
     {
         $this->assertEquals(6, $this->owner->getPrimaryCampusId());
+    }
+
+    public function testGetCursusUsers(): void
+    {
+        $data = [
+            [
+                'grade' => 'Commander',
+                'level' => 13.37,
+                'skills' => [],
+                'blackholed_at' => null,
+                'id' => 3213,
+                'cursus' => [
+                    'id' => 2,
+                    'name' => 'Test cursus',
+                ],
+            ],
+            [
+                'grade' => 'Chandler',
+                'level' => 42.20,
+                'skills' => [],
+                'blackholed_at' => null,
+                'id' => 4222,
+                'cursus' => [
+                    'id' => 5,
+                    'name' => 'Test cursus 2',
+                ],
+            ]
+        ];
+        $this->assertEquals($data, $this->owner->getCursusUsers());
+    }
+
+    public function testGetCursusUser(): void
+    {
+        $this->assertEquals('Chandler', $this->owner->getCursusUser(5)['grade']);
     }
 }

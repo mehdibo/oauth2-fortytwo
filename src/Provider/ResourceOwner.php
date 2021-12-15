@@ -58,6 +58,30 @@ class ResourceOwner extends GenericResourceOwner
         return $roles;
     }
 
+    /**
+     * @return array<int, array<string, mixed>
+     */
+    public function getCursusUsers(): array
+    {
+        return $this->response['cursus_users'];
+    }
+
+    /**
+     * @return array<string, mixed>|null Returns the cursus user or null if it doesn't exist
+     */
+    public function getCursusUser(int $cursusId): ?array
+    {
+        foreach ($this->getCursusUsers() as $cursusUser) {
+            if ($cursusUser['cursus']['id'] === $cursusId) {
+                return $cursusUser;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return int Returns 0 if a primary campus was not found
+     */
     public function getPrimaryCampusId(): int
     {
         foreach ($this->response['campus_users'] as $campusUser) {
@@ -65,6 +89,6 @@ class ResourceOwner extends GenericResourceOwner
                 return $campusUser['campus_id'];
             }
         }
-        return null;
+        return 0;
     }
 }
