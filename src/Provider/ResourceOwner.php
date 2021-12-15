@@ -51,6 +51,16 @@ class ResourceOwner extends GenericResourceOwner
         return $this->response['correction_point'];
     }
 
+    public function getPoolMonth(): string
+    {
+        return $this->response['pool_month'];
+    }
+
+    public function getPoolYear(): string
+    {
+        return $this->response['pool_year'];
+    }
+
     public function getWallet(): int
     {
         return $this->response['wallet'];

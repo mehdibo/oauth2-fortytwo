@@ -20,6 +20,8 @@ class ResourceOwnerTest extends TestCase
             'last_name' => 'Cat',
             'image_url' => 'image_url',
             'staff?' => true,
+            'pool_month' => 'august',
+            'pool_year' => '2020',
             'correction_point' => 5,
             'wallet' => 1337,
             'anonymize_date' => '2022-12-09T00:00:00.000+01:00',
@@ -107,6 +109,16 @@ class ResourceOwnerTest extends TestCase
     public function testGetEvaluationPoints(): void
     {
         $this->assertEquals(5, $this->owner->getEvaluationPoints());
+    }
+
+    public function testGetPoolMonth(): void
+    {
+        $this->assertEquals('august', $this->owner->getPoolMonth());
+    }
+
+    public function testGetPoolYear(): void
+    {
+        $this->assertEquals('2020', $this->owner->getPoolYear());
     }
 
     public function testGetWallet(): void
