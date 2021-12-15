@@ -178,6 +178,13 @@ class ResourceOwnerTest extends TestCase
 
     public function testGetCursusUser(): void
     {
-        $this->assertEquals('Chandler', $this->owner->getCursusUser(5)['grade']);
+        $cursusUser = $this->owner->getCursusUser(5);
+        $this->assertNotNull($cursusUser);
+        // For PHPSta
+        if ($cursusUser === null) {
+            return;
+        }
+        $this->assertArrayHasKey('grade', $cursusUser);
+        $this->assertEquals('Chandler', $cursusUser['grade']);
     }
 }

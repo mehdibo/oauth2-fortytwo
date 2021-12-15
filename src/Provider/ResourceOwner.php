@@ -84,7 +84,7 @@ class ResourceOwner extends GenericResourceOwner
     }
 
     /**
-     * @return array<int, array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
     public function getCursusUsers(): array
     {
