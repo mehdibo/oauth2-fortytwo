@@ -52,7 +52,7 @@ class FortyTwo extends AbstractProvider
         if ($response->getStatusCode() !== 200) {
             $errorDescription = '';
             $error = '';
-            if (\is_array($data)) {
+            if (\is_array($data) && !empty($data)) {
                 $errorDescription = $data['error_description'] ?? $data['message'];
                 $error = $data['error'];
             }

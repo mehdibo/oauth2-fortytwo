@@ -3,6 +3,7 @@
 namespace Mehdibo\OAuth2\Client\Test;
 
 use GuzzleHttp\ClientInterface;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Mehdibo\OAuth2\Client\Provider\FortyTwo;
 use Mehdibo\OAuth2\Client\Provider\ResourceOwner;
@@ -37,6 +38,10 @@ class FortyTwoTest extends TestCase
 
         $response->method('getBody')
             ->willReturn($responseBody);
+
+        $response->method('getHeader')
+            ->with('content-type')
+            ->willReturn('application/json');
 
         return $response;
     }
@@ -179,5 +184,42 @@ JSON);
             'image_url' => 'image_url',
             'staff?' => false,
         ], $resourceOwner->toArray());
+    }
+
+    public function testCanHandleErrors(): void
+    {
+        $response = $this->createMockResponse(<<<JSON
+{
+  "error_description": "This is the description",
+  "error": "error_name"
+}
+JSON, 403);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->method('send')
+            ->willReturn($response);
+
+
+        $this->provider->setHttpClient($client);
+
+        $this->expectException(IdentityProviderException::class);
+        $this->expectExceptionMessage("403 - error_name: This is the description");
+        $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+    }
+
+    public function testCanHandleEmptyErrors(): void
+    {
+        $response = $this->createMockResponse("{}", 403);
+
+        $client = $this->createMock(ClientInterface::class);
+        $client->method('send')
+            ->willReturn($response);
+
+
+        $this->provider->setHttpClient($client);
+
+        $this->expectException(IdentityProviderException::class);
+        $this->expectExceptionMessage("403 - : ");
+        $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
     }
 }

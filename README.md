@@ -18,7 +18,79 @@ composer require mehdibo/oauth2-fortytwo
 
 ## Usage
 
-### Authorization Code Flow
+## Using with Symfony
+
+You can use this library with [knpuniversity/oauth2-client-bundle](https://github.com/knpuniversity/oauth2-client-bundle)
+
+Install [knpuniversity/oauth2-client-bundle](https://github.com/knpuniversity/oauth2-client-bundle) using composer:
+
+```
+composer require knpuniversity/oauth2-client-bundle
+```
+
+Install mehdibo/oauth2-fortytwo:
+
+```
+composer require mehdibo/oauth2-fortytwo
+```
+
+Add these lines to your `.env` file:
+```
+###> mehdibo/oauth2-fortytwo ###
+OAUTH_FT_ID=
+OAUTH_FT_SECRET=
+###< mehdibo/oauth2-fortytwo ###
+```
+
+Configure the bundle to use FT's client, by updating `config/packages/knpu_oauth2_client.yml`:
+```yaml
+knpu_oauth2_client:
+    clients:
+        forty_two:
+            type: generic
+            provider_class: Mehdibo\OAuth2\Client\Provider\FortyTwo
+            client_id: '%env(OAUTH_FT_ID)%'
+            client_secret: '%env(OAUTH_FT_SECRET)%'
+            redirect_route: auth_social_fortytwo_check # Here is the name of the route that will be used to check the code
+```
+
+Create the controller to handle the authentication logic, check [this](https://github.com/knpuniversity/oauth2-client-bundle#authenticating-with-guard) for more details about that.
+
+```php
+# src/Controller/FortyTwoController.php
+
+namespace App\Controller;
+
+use ApiPlatform\Core\OpenApi\Model\Operation;
+use ApiPlatform\Core\OpenApi\Model\PathItem;
+use ApiPlatform\Core\OpenApi\OpenApi;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+class FortyTwoController extends AbstractController
+{
+
+    #[Route('/auth/login/fortytwo', name: 'auth_social_fortytwo_start')]
+    public function connect(ClientRegistry $clientRegistry): RedirectResponse
+    {
+        return $clientRegistry
+            ->getClient('forty_two')
+            ->redirect([], []);
+    }
+
+    #[Route('/auth/login/fortytwo/check', name: 'auth_social_fortytwo_check')]
+    public function connectCheck(Request $request, ClientRegistry $clientRegistry): void
+    {
+        throw new \LogicException("This should be caught by the guard authenticator");
+    }
+}
+```
+
+The final step is to create an Authentication guard
+
+## Authorization Code Flow
 
 ```php
 $provider = new \Mehdibo\OAuth2\Client\Provider\FortyTwo([
@@ -58,7 +130,7 @@ if (!isset($_GET['code'])) {
         $user = $provider->getResourceOwner($token);
 
         // Use these details to create a new profile
-        printf('Hello %s!', $user->getLogin()));
+        printf('Hello %s!', $user->getLogin());
 
     } catch (Exception $e) {
 
