@@ -20,6 +20,9 @@ class ResourceOwnerTest extends TestCase
             'last_name' => 'Cat',
             'image_url' => 'image_url',
             'staff?' => true,
+            'correction_point' => 5,
+            'wallet' => 1337,
+            'anonymize_date' => '2022-12-09T00:00:00.000+01:00',
             'roles' => [
                 [
                     'id' => 1,
@@ -99,6 +102,22 @@ class ResourceOwnerTest extends TestCase
     public function testGetIsStaff(): void
     {
         $this->assertTrue($this->owner->getIsStaff());
+    }
+
+    public function testGetEvaluationPoints(): void
+    {
+        $this->assertEquals(5, $this->owner->getEvaluationPoints());
+    }
+
+    public function testGetWallet(): void
+    {
+        $this->assertEquals(1337, $this->owner->getWallet());
+    }
+
+    public function testGetAnonymizationDate(): void
+    {
+        $expectedDate = new \DateTime('2022-12-09T00:00:00.000+01:00');
+        $this->assertEquals($expectedDate, $this->owner->getAnonymizationDate());
     }
 
     public function testGetLogin(): void

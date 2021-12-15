@@ -46,6 +46,21 @@ class ResourceOwner extends GenericResourceOwner
         return $this->response['staff?'];
     }
 
+    public function getEvaluationPoints(): int
+    {
+        return $this->response['correction_point'];
+    }
+
+    public function getWallet(): int
+    {
+        return $this->response['wallet'];
+    }
+
+    public function getAnonymizationDate(): \DateTimeInterface
+    {
+        return new \DateTime($this->response['anonymize_date']);
+    }
+
     /**
      * @return string[]
      */
