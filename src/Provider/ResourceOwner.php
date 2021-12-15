@@ -16,34 +16,34 @@ class ResourceOwner extends GenericResourceOwner
         parent::__construct($response, "id");
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
-        return $this->response['email'] ?? null;
+        return $this->response['email'];
     }
 
-    public function getLogin(): ?string
+    public function getLogin(): string
     {
-        return $this->response['login'] ?? null;
+        return $this->response['login'];
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
-        return $this->response['first_name'] ?? null;
+        return $this->response['first_name'];
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
-        return $this->response['last_name'] ?? null;
+        return $this->response['last_name'];
     }
 
-    public function getImageUrl(): ?string
+    public function getImageUrl(): string
     {
-        return $this->response['image_url'] ?? null;
+        return $this->response['image_url'];
     }
 
-    public function getIsStaff(): ?bool
+    public function getIsStaff(): bool
     {
-        return $this->response['staff?'] ?? null;
+        return $this->response['staff?'];
     }
 
     /**
@@ -58,7 +58,7 @@ class ResourceOwner extends GenericResourceOwner
         return $roles;
     }
 
-    public function getPrimaryCampusId(): ?int
+    public function getPrimaryCampusId(): int
     {
         foreach ($this->response['campus_users'] as $campusUser) {
             if ($campusUser['is_primary']) {
