@@ -47,7 +47,7 @@ class FortyTwo extends AbstractProvider
      * @param array<string, mixed>|string $data
      * @throws IdentityProviderException
      */
-    protected function checkResponse(ResponseInterface $response, $data)
+    protected function checkResponse(ResponseInterface $response, $data): void
     {
         if ($response->getStatusCode() !== 200) {
             $errorDescription = '';
